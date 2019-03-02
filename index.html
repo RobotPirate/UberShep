@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Uber Shep</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
@@ -23,6 +24,12 @@
       </div>
 
       <button id="togglePage">Start Shep</button>
+      <div id="happyOrNot">
+        <a id="audioSettings">Audio Settings:</a>
+        <a data-audioSettings="both" class="audioSettingBtn">Both on path and warning sounds</a>
+        <a data-audioSettings="onlywarning" class="audioSettingBtn">Only warning sounds</a>
+      </div>
+      <i class="fas fa-cog"></i>
     </div>
 
   </body>
@@ -43,9 +50,10 @@
     let index = 0;
     let avg = 0;
     let interval;
+    let playBoth = true;
 
     let happyAudio = new Audio('cow_moo.mp3');
-    let sadAudio = new Audio('devil_dog.mp3');
+    let sadAudio = new Audio('bark1.mp3');
 
     let happyMessages = ['Way to go!', 'You\'re on your way!', 'Right on track!', 'Keep it up!', 'Great sense of direction!'];
     let sadMessages = ['Whoa there, Nelly!', 'Hmmmm...', 'Do you even know where you\'re going?', 'Get moving', 'Better double check that location'];
@@ -53,6 +61,7 @@
     // get the pickup location from API
     $(document).ready(function() {
       $('#shepherdPage').hide();
+      $('#happyOrNot').hide();
 
       getLocation();
 
@@ -71,6 +80,20 @@
         }
         $('#shepherdPage').toggle();
         $('#landingPage').toggle();
+      });
+
+      // show menu for disabling good sounds
+      $('.fa-cog').on('click', function() {
+        $('#happyOrNot').slideToggle();
+      });
+
+      $('.audioSettingBtn').on('click', function() {
+        if($(this).data('audioSettings') == 'both') {
+          playBoth = true;
+        }
+        else if($(this).data('audioSettings') == 'onlywarning') {
+          playBoth = false;
+        }
       });
 
       ajax();
@@ -120,7 +143,9 @@
       console.log('index: ' + index);
       if(d < pastLocations[(index+1)%pastLocations.length]) {
         closer = true;
-        happyAudio.play();
+        if(playBoth) {
+          happyAudio.play();
+        }
       }
       else {
         closer = false;

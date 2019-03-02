@@ -77,3 +77,21 @@ body {
   border-radius: 10px;
   font-size: 15px;
 }
+
+@media (max-width: 540px) {
+  #shepherdLogo {
+    font-size: 45px;
+  }
+
+  .audioSettingBtn {
+    display: block;
+    margin-top: 10px;
+    color: white;
+    cursor: pointer;
+    border: none;
+    padding: 10px;
+    background-color: #858585;
+    border-radius: 10px;
+    font-size: 15px;
+  }
+}

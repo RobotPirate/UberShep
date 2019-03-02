@@ -3,16 +3,21 @@
   <head>
     <meta charset="utf-8">
     <title>Uber Shep</title>
-  </head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
 
-  </style>
+    </style>
+  </head>
   <body>
     <div id="distanceUpdate">
       Move towards your point of meeting.
     </div>
   </body>
+  <script
+  	src="https://code.jquery.com/jquery-3.3.1.min.js"
+  	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  	crossorigin="anonymous">
+	</script>
   <script>
     // initialize variables for user's and destination coords
     let latitude = 0;
@@ -24,7 +29,11 @@
     let pastLocations = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
     let index = 0;
     let avg = 0;
-    // let threshold = 0.3;
+
+    // get the pickup location from API
+    $(document).ready(function() {
+      ajax();
+    });
 
     // prints every 5 seconds location on console
     setInterval(function() {
@@ -38,24 +47,15 @@
   				latitude = position.coords.latitude
   				longitude = position.coords.longitude
           distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
-  				// printUserLocation()
 
           index = (index + 1) % pastLocations.length;
           avg = average(pastLocations);
-          // closer = goodEnough();
-          // index++;
-          // if(index == 5) {
-          //   index = index % 5;
-          //
-          // }
           printUserLocation();
   			}, function(error) {
-  				alert('Geolocation permission denied. Default location will be set to SAL.')
-  				// printUserLocation()
+  				alert('Geolocation permission denied. Default location will be set to SAL.');
   			});
   		} else {
-  			alert('Geolocation is not supported on this browser. Default location will be set to SAL.')
-  			// printUserLocation()
+  			alert('Geolocation is not supported on this browser. Default location will be set to SAL.');
   		}
   	}
 
@@ -104,10 +104,28 @@
       return sum/arr.length;
     }
 
-    // tells if past records good enough for happy bark
-    // function goodEnough() {
-    //   return avg >= threshold;
-    // }
+    function ajax() {
+      $.ajax({
+        method: 'POST',
+        url: 'index.js',
+        data: {
+          action: 'getPickup'
+        }
+      }).done(function(results) {
+        if(results == null) {
+          console.log('AJAX error: returned null object')
+        }
+        else { // calculate the pickup location based on results
+          getPickup(JSON.parse(results));
+        }
+      });
+      return false;
+    }
 
+    // set pickup data based on API results
+    function getPickup(results) {
+      destLatitude = results.latitude;
+      destLongitude = results.longitude;
+    }
   </script>
 </html>

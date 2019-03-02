@@ -23,8 +23,9 @@
       <div id="distanceUpdate">
         Move towards your pickup location.
       </div>
-      <button>Stop Shep</button>
     </div>
+
+    <button id="togglePage">Start Shep</button>
   </body>
   <script
   	src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -42,19 +43,36 @@
     let pastLocations = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
     let index = 0;
     let avg = 0;
+    let interval;
 
     let happyAudio = new Audio('cow_moo.mp3');
     let sadAudio = new Audio('devil_dog.mp3');
 
     // get the pickup location from API
     $(document).ready(function() {
+      $('#shepherdPage').hide();
+
+      getLocation();
+
+      $('#togglePage').on('click', function() {
+        if($(this).html() == 'Start Shep') {
+          $(this).html('Stop Shep');
+
+          // prints every 5 seconds location on console
+          interval = setInterval(function() {
+            getLocation();
+          }, 2000);
+        }
+        else {
+          $(this).html('Start Shep');
+          clearInterval(interval);
+        }
+        $('#shepherdPage').toggle();
+        $('#landingPage').toggle();
+      });
+
       ajax();
     });
-
-    // prints every 5 seconds location on console
-    setInterval(function() {
-      getLocation();
-    }, 2000);
 
     // gets location of user from geolocation
     function getLocation() {

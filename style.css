@@ -1,9 +1,15 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 body {
 	/*Gradient Animation from CSS Gradient Animator, https://www.gradient-animator.com/ */
   background: linear-gradient(225deg, #9b9ef1, #7873eb, #5c7be9);
   background-color: black;
   background-size: cover;
   font-size: 60px;
+  height: 800px;
 }
 
 #togglePage {

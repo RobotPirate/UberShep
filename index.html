@@ -52,6 +52,7 @@
     let avg = 0;
     let interval;
     let playBoth = true;
+    let firstAskLocation = true;
 
     let happyAudio = new Audio('onpath.mp3');
     let sadAudio = new Audio('bark1.mp3');
@@ -78,6 +79,7 @@
         else {
           $(this).html('Start Shep');
           clearInterval(interval);
+          firstAskLocation = true;
         }
         $('#shepherdPage').toggle();
         $('#landingPage').toggle();
@@ -105,13 +107,19 @@
     function getLocation() {
   		if ("geolocation" in navigator) {
   			navigator.geolocation.getCurrentPosition(function(position) {
-  				latitude = position.coords.latitude
-  				longitude = position.coords.longitude
+  				latitude = position.coords.latitude;
+  				longitude = position.coords.longitude;
   			}, function(error) {
-  				alert('Geolocation permission denied. Default location will be set to SAL.');
+          if(firstAskLocation) {
+            alert('Geolocation permission denied. Default location will be set to SAL.');
+            firstAskLocation = false;
+          }
   			});
   		} else {
-  			alert('Geolocation is not supported on this browser. Default location will be set to SAL.');
+        if(firstAskLocation) {
+          alert('Geolocation permission denied. Default location will be set to SAL.');
+          firstAskLocation = false;
+        }
   		}
 
       distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);

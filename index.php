@@ -8,7 +8,7 @@
 
   </style>
   <body>
-    <div class="distanceUpdate">
+    <div id="distanceUpdate">
       Move towards your point of meeting.
     </div>
   </body>
@@ -19,6 +19,7 @@
     let destLatitude = 34.139137;
     let destLongitude = -118.125471;
     let distance = 0;
+    let closer = false;
 
     // prints every 5 seconds location on console
     setInterval(function() {
@@ -47,6 +48,7 @@
   		console.log('Latitude: ' + latitude)
   		console.log('Longitude: ' + longitude)
       console.log('Distance to goal: ' + distance);
+      document.querySelector('#distanceUpdate').innerHTML = 'Latitude: ' + latitude + '<br />Longitude: ' + longitude + '<br/>Distance: ' + distance + '<br />Closer? ' + closer;
   	}
 
     function getDistanceFromLatLonInM(lat1,lon1,lat2,lon2) {
@@ -60,6 +62,12 @@
       var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
       var d = R * c * 1000; // Distance in m
 
+      if(d < distance) {
+        closer = true;
+      }
+      else {
+        closer = false;
+      }
       return d;
     }
 

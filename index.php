@@ -15,6 +15,7 @@
     </div>
 
     <div id="landingPage">
+      <img src="shephard.png" id="logo">
       <button>Start Shep</button>
     </div>
 

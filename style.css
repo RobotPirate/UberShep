@@ -1,7 +1,7 @@
 body {
 	/*Gradient Animation from CSS Gradient Animator, https://www.gradient-animator.com/ */
   background: linear-gradient(225deg, #9b9ef1, #7873eb, #5c7be9);
-  /* background-size: 600% 600%; */
+  background-size: 600% 600%;
   font-family: Verdana;
   font-size: 60px;
 

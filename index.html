@@ -147,11 +147,14 @@
 
     function printUserLocation() {
       console.log('Latitude: ' + latitude + '\nLongitude: ' + longitude + '\nDistance: ' + distance + '\nDistance 9 times ago: ' + pastLocations[(index+1)%pastLocations.length] + '\nCloser? ' + closer + '\nAverage: ' + avg);
+      $('#distanceUpdate').append('<br />Latitude: ' + latitude + '<br />Longitude: ' + longitude + '<br />Distance: ' + distance + '<br />Distance 9 times ago: ' + pastLocations[(index+1)%pastLocations.length] + '<br />Closer? ' + closer + '<br />Average: ' + avg + '<br /><br />')
       if(closer) {
-        $('#distanceUpdate').html(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
+        $('#distanceUpdate').append(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
+        // $('#distanceUpdate').html(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
       }
       else {
-        $('#distanceUpdate').html(sadMessages[randomIntFromInterval(0, sadMessages.length)]);
+        $('#distanceUpdate').append(sadMessages[randomIntFromInterval(0, sadMessages.length)]);
+        // $('#distanceUpdate').html(sadMessages[randomIntFromInterval(0, sadMessages.length)]);
       }
     }
 
@@ -230,14 +233,13 @@
 
     // call when arrive at destination, reset everything
     function reward() {
-      $('#togglePage').html('Start Shep');
       clearInterval(interval);
       firstAskLocation = true;
       calibrating = true;
-      $('#shepherdPage').hide();
 
       rewardAudio.play();
-      $('#distanceUpdate').html('You\'ve arrived!  Your UberPool will arrive soon.');
+      // $('#distanceUpdate').html('You\'ve arrived!  Your UberPool will arrive soon.');
+      $('#distanceUpdate').append('<br /><br />You\'ve arrived!  Your UberPool will arrive soon.');
     }
   </script>
 </html>

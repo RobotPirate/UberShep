@@ -10,7 +10,7 @@
   </head>
   <body>
     <div id="distanceUpdate">
-      Move towards your point of meeting.
+      Move towards your pickup location.
     </div>
   </body>
   <script
@@ -29,6 +29,9 @@
     let pastLocations = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
     let index = 0;
     let avg = 0;
+
+    let happyAudio = new Audio('cow_moo.mp3');
+    let sadAudio = new Audio('devil_dog.mp3');
 
     // get the pickup location from API
     $(document).ready(function() {
@@ -81,9 +84,11 @@
       console.log('index: ' + index);
       if(d < pastLocations[(index+1)%pastLocations.length]) {
         closer = true;
+        happyAudio.play();
       }
       else {
         closer = false;
+        sadAudio.play();
       }
       pastLocations[index] = d;
 

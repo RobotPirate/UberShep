@@ -27,8 +27,8 @@
       <button id="togglePage">Start Shep</button>
       <div id="happyOrNot">
         <a id="audioSettings">Audio Settings:</a>
-        <a data-audioSettings="both" class="audioSettingBtn">Both on path and warning sounds</a>
-        <a data-audioSettings="onlywarning" class="audioSettingBtn">Only warning sounds</a>
+        <a data-audio-settings="both" class="audioSettingBtn">Both on path and warning sounds</a>
+        <a data-audio-settings="onlywarning" class="audioSettingBtn">Only warning sounds</a>
       </div>
       <i class="fas fa-cog"></i>
     </div>
@@ -41,8 +41,8 @@
 	</script>
   <script>
     // initialize variables for user's and destination coords
-    let latitude = 0;
-    let longitude = 0;
+    let latitude = 34.019579;
+    let longitude = -118.289441;
     let destLatitude = 34.139137;
     let destLongitude = -118.125471;
     let distance = 0;
@@ -53,7 +53,7 @@
     let interval;
     let playBoth = true;
 
-    let happyAudio = new Audio('cow_moo.mp3');
+    let happyAudio = new Audio('onpath.mp3');
     let sadAudio = new Audio('bark1.mp3');
 
     let happyMessages = ['Way to go!', 'You\'re on your way!', 'Right on track!', 'Keep it up!', 'Great sense of direction!'];
@@ -95,6 +95,7 @@
         else if($(this).data('audioSettings') == 'onlywarning') {
           playBoth = false;
         }
+        $('#happyOrNot').slideToggle();
       });
 
       ajax();
@@ -106,17 +107,20 @@
   			navigator.geolocation.getCurrentPosition(function(position) {
   				latitude = position.coords.latitude
   				longitude = position.coords.longitude
-          distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
-
-          index = (index + 1) % pastLocations.length;
-          avg = average(pastLocations);
-          printUserLocation();
   			}, function(error) {
   				alert('Geolocation permission denied. Default location will be set to SAL.');
   			});
   		} else {
   			alert('Geolocation is not supported on this browser. Default location will be set to SAL.');
   		}
+
+      distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
+
+      index = (index + 1) % pastLocations.length;
+      avg = average(pastLocations);
+      if(index%2 == 0) {
+        printUserLocation();
+      }
   	}
 
     function printUserLocation() {
@@ -144,13 +148,15 @@
       console.log('index: ' + index);
       if(d < pastLocations[(index+1)%pastLocations.length]) {
         closer = true;
-        if(playBoth) {
+        if((index-1)%2 == 0 && playBoth) {
           happyAudio.play();
         }
       }
       else {
         closer = false;
-        sadAudio.play();
+        if((index-1)%2 == 0) {
+          sadAudio.play();
+        }
       }
       pastLocations[index] = d;
 

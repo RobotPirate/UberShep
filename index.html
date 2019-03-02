@@ -15,9 +15,6 @@
         <div id="logoTitle">UberShep</div>
       </div>
 
-      <div id="landingPage">
-      </div>
-
       <div id="shepherdPage">
         <div id="distanceUpdate">
           Move towards your pickup location.
@@ -53,9 +50,11 @@
     let interval;
     let playBoth = true;
     let firstAskLocation = true;
+    let okRadius = 15;
 
     let happyAudio = new Audio('onpath.mp3');
     let sadAudio = new Audio('bark1.mp3');
+    let rewardAudio = new Audio('applause.mp3');
 
     let happyMessages = ['Way to go!', 'You\'re on your way!', 'Right on track!', 'Keep it up!', 'Great sense of direction!'];
     let sadMessages = ['Whoa there, Nelly!', 'Hmmmm...', 'Do you even know where you\'re going?', 'Get moving', 'Better double check that location'];
@@ -82,7 +81,6 @@
           firstAskLocation = true;
         }
         $('#shepherdPage').toggle();
-        $('#landingPage').toggle();
       });
 
       // show menu for disabling good sounds
@@ -124,10 +122,16 @@
 
       distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
 
-      index = (index + 1) % pastLocations.length;
-      avg = average(pastLocations);
-      if(index%2 == 0) {
-        printUserLocation();
+      // check if done
+      if(distance <= okRadius) {
+        reward();
+      }
+      else {
+        index = (index + 1) % pastLocations.length;
+        avg = average(pastLocations);
+        if(index%2 == 0) {
+          printUserLocation();
+        }
       }
   	}
 
@@ -211,6 +215,17 @@
 
     function randomIntFromInterval(min, max) {
       return Math.floor(Math.random()*(max-min+1)+min);
+    }
+
+    // call when arrive at destination, reset everything
+    function reward() {
+      $('#togglePage').html('Start Shep');
+      clearInterval(interval);
+      firstAskLocation = true;
+      $('#shepherdPage').hide();
+
+      rewardAudio.play();
+      $('#distanceUpdate').html('You\'ve arrived!  Your UberPool will arrive soon.');
     }
   </script>
 </html>

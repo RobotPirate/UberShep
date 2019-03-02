@@ -23,9 +23,9 @@
 
       <button id="togglePage">Start Shep</button>
       <div id="happyOrNot">
-        <a id="audioSettings">Audio Settings:</a>
-        <a data-audio-settings="both" class="audioSettingBtn">Both on path and warning sounds</a>
-        <a data-audio-settings="onlywarning" class="audioSettingBtn">Only warning sounds</a>
+        <a id="audioSettings">Audio:</a>
+        <a data-audio-settings="both" class="audioSettingBtn">On path and warning sounds</a>
+        <a data-audio-settings="onlywarning" class="audioSettingBtn">Warning sounds</a>
       </div>
       <i class="fas fa-cog"></i>
     </div>
@@ -42,8 +42,8 @@
     let longitude = -118.289441;
     let destLatitude = 34.139137;
     let destLongitude = -118.125471;
-    let distance = 0;
-    let closer = false;
+    let distance = -1;
+    let closer = true;
     let pastLocations = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
     let index = 0;
     let avg = 0;
@@ -51,6 +51,7 @@
     let playBoth = true;
     let firstAskLocation = true;
     let okRadius = 15;
+    let calibrating = true;
 
     let happyAudio = new Audio('onpath.mp3');
     let sadAudio = new Audio('bark1.mp3');
@@ -107,36 +108,45 @@
   			navigator.geolocation.getCurrentPosition(function(position) {
   				latitude = position.coords.latitude;
   				longitude = position.coords.longitude;
+          distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
   			}, function(error) {
           if(firstAskLocation) {
             alert('Geolocation permission denied. Default location will be set to SAL.');
             firstAskLocation = false;
+            distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
           }
   			});
   		} else {
         if(firstAskLocation) {
           alert('Geolocation permission denied. Default location will be set to SAL.');
           firstAskLocation = false;
+          distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
         }
   		}
 
-      distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
+      // first time got distance, set all in array to that dist
+      if(calibrating) {
+        for(let i=1; i<pastLocations.length; i++) {
+          pastLocations[i] = distance;
+        }
+        calibrating = false;
+      }
 
       // check if done
-      if(distance <= okRadius) {
+      if(distance <= okRadius && distance != -1) {
+        console.log('distance: ' +distance)
         reward();
       }
       else {
-        index = (index + 1) % pastLocations.length;
-        avg = average(pastLocations);
         if(index%2 == 0) {
           printUserLocation();
         }
+        index = (index + 1) % pastLocations.length;
       }
   	}
 
     function printUserLocation() {
-      console.log('Latitude: ' + latitude + '<br />Longitude: ' + longitude + '<br/>Distance: ' + distance + '<br />Distance 9 times ago: ' + pastLocations[(index+5)%pastLocations.length] + '<br />Closer? ' + closer + '<br />Average: ' + avg);
+      console.log('Latitude: ' + latitude + '\nLongitude: ' + longitude + '\nDistance: ' + distance + '\nDistance 9 times ago: ' + pastLocations[(index+1)%pastLocations.length] + '\nCloser? ' + closer + '\nAverage: ' + avg);
       if(closer) {
         $('#distanceUpdate').html(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
       }
@@ -158,15 +168,16 @@
 
       // fill in pastLocations array
       console.log('index: ' + index);
+      console.log('d: ' + d);
       if(d < pastLocations[(index+1)%pastLocations.length]) {
         closer = true;
-        if((index-1)%2 == 0 && playBoth) {
+        if(!calibrating && (index)%2 == 0 && playBoth) {
           happyAudio.play();
         }
       }
       else {
         closer = false;
-        if((index-1)%2 == 0) {
+        if(!calibrating && (index)%2 == 0) {
           sadAudio.play();
         }
       }
@@ -222,6 +233,7 @@
       $('#togglePage').html('Start Shep');
       clearInterval(interval);
       firstAskLocation = true;
+      calibrating = true;
       $('#shepherdPage').hide();
 
       rewardAudio.play();

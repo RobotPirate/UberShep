@@ -82,7 +82,9 @@ body {
   #shepherdLogo {
     font-size: 45px;
   }
+}
 
+@media (max-width: 715px) {
   .audioSettingBtn {
     display: block;
     margin-top: 10px;

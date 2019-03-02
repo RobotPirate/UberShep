@@ -5,9 +5,6 @@
     <title>Uber Shep</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <style>
-
-    </style>
   </head>
   <body>
     <div id="mainContainer">
@@ -49,6 +46,9 @@
 
     let happyAudio = new Audio('cow_moo.mp3');
     let sadAudio = new Audio('devil_dog.mp3');
+
+    let happyMessages = ['Way to go!', 'You\'re on your way!', 'Right on track!', 'Keep it up!', 'Great sense of direction!'];
+    let sadMessages = ['Whoa there, Nelly!', 'Hmmmm...', 'Do you even know where you\'re going?', 'Get moving', 'Better double check that location'];
 
     // get the pickup location from API
     $(document).ready(function() {
@@ -96,11 +96,14 @@
   	}
 
     function printUserLocation() {
-  		console.log('Latitude: ' + latitude)
-  		console.log('Longitude: ' + longitude)
-      console.log('Distance to goal: ' + distance);
-      document.querySelector('#distanceUpdate').innerHTML = 'Latitude: ' + latitude + '<br />Longitude: ' + longitude + '<br/>Distance: ' + distance + '<br />Distance 9 times ago: ' + pastLocations[(index+5)%pastLocations.length] + '<br />Closer? ' + closer + '<br />Average: ' + avg;
-  	}
+      console.log('Latitude: ' + latitude + '<br />Longitude: ' + longitude + '<br/>Distance: ' + distance + '<br />Distance 9 times ago: ' + pastLocations[(index+5)%pastLocations.length] + '<br />Closer? ' + closer + '<br />Average: ' + avg);
+      if(closer) {
+        $('#distanceUpdate').html(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
+      }
+      else {
+        $('#distanceUpdate').html(sadMessages[randomIntFromInterval(0, sadMessages.length)]);
+      }
+    }
 
     function getDistanceFromLatLonInM(lat1,lon1,lat2,lon2) {
       var R = 6371; // Radius of the earth in km
@@ -164,6 +167,10 @@
     function getPickup(results) {
       destLatitude = results.latitude;
       destLongitude = results.longitude;
+    }
+
+    function randomIntFromInterval(min, max) {
+      return Math.floor(Math.random()*(max-min+1)+min);
     }
   </script>
 </html>

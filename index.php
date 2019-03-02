@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Uber Shep</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <style>
 
     </style>
@@ -16,7 +17,7 @@
     <div id="landingPage">
       <button>Start Shep</button>
     </div>
-    
+
     <div id="shepherdPage">
       <div id="distanceUpdate">
         Move towards your pickup location.

@@ -21,15 +21,15 @@
     let destLongitude = -118.125471;
     let distance = 0;
     let closer = false;
-    let pastLocations = [1000, 1000, 1000, 1000, 1000];
+    let pastLocations = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
     let index = 0;
     let avg = 0;
-    let threshold = 0.3;
+    // let threshold = 0.3;
 
     // prints every 5 seconds location on console
     setInterval(function() {
       getLocation();
-    }, 5000);
+    }, 2000);
 
     // gets location of user from geolocation
     function getLocation() {
@@ -40,9 +40,9 @@
           distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
   				// printUserLocation()
 
-          index = (index + 1) % 5;
+          index = (index + 1) % pastLocations.length;
           avg = average(pastLocations);
-          closer = goodEnough();
+          // closer = goodEnough();
           // index++;
           // if(index == 5) {
           //   index = index % 5;
@@ -63,7 +63,7 @@
   		console.log('Latitude: ' + latitude)
   		console.log('Longitude: ' + longitude)
       console.log('Distance to goal: ' + distance);
-      document.querySelector('#distanceUpdate').innerHTML = 'Latitude: ' + latitude + '<br />Longitude: ' + longitude + '<br/>Distance: ' + distance + '<br />Closer? ' + closer + '<br />Average: ' + avg;
+      document.querySelector('#distanceUpdate').innerHTML = 'Latitude: ' + latitude + '<br />Longitude: ' + longitude + '<br/>Distance: ' + distance + '<br />Distance 9 times ago: ' + pastLocations[(index+5)%pastLocations.length] + '<br />Closer? ' + closer + '<br />Average: ' + avg;
   	}
 
     function getDistanceFromLatLonInM(lat1,lon1,lat2,lon2) {
@@ -78,14 +78,14 @@
       var d = R * c * 1000; // Distance in m
 
       // fill in pastLocations array
-      if(d < distance) {
+      console.log('index: ' + index);
+      if(d < pastLocations[(index+1)%pastLocations.length]) {
         closer = true;
-        pastLocations[index] = 1;
       }
       else {
         closer = false;
-        pastLocations[index] = 0;
       }
+      pastLocations[index] = d;
 
       return d;
     }
@@ -105,9 +105,9 @@
     }
 
     // tells if past records good enough for happy bark
-    function goodEnough() {
-      return avg >= threshold;
-    }
+    // function goodEnough() {
+    //   return avg >= threshold;
+    // }
 
   </script>
 </html>

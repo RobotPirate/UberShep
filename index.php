@@ -9,8 +9,19 @@
     </style>
   </head>
   <body>
-    <div id="distanceUpdate">
-      Move towards your pickup location.
+    <div class="shepherdLogo">
+
+    </div>
+
+    <div id="landingPage">
+      <button>Start Shep</button>
+    </div>
+    
+    <div id="shepherdPage">
+      <div id="distanceUpdate">
+        Move towards your pickup location.
+      </div>
+      <button>Stop Shep</button>
     </div>
   </body>
   <script

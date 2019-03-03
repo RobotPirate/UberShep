@@ -24,7 +24,7 @@
       <button id="togglePage">Start Shep</button>
       <div id="happyOrNot">
         <a id="audioSettings">Audio:</a>
-        <a data-audio-settings="both" class="audioSettingBtn">On path and warning sounds</a>
+        <a data-audio-settings="both" class="audioSettingBtn">On-path and warning sounds</a>
         <a data-audio-settings="onlywarning" class="audioSettingBtn">Warning sounds only</a>
       </div>
       <i class="fas fa-cog"></i>
@@ -40,8 +40,8 @@
     // initialize variables for user's and destination coords
     let latitude = 34.019579;
     let longitude = -118.289441;
-    let destLatitude = 34.138981;
-    let destLongitude = -118.122893;
+    let destLatitude = 34.019579;
+    let destLongitude = -118.289441;
     let distance = -1;
     let closer = true;
     let pastLocations = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -213,16 +213,19 @@
     function ajax() {
       $.ajax({
         method: 'POST',
-        url: 'index.js',
+        // url: 'index.js',
+        url: 'working_someting.php',
         data: {
           action: 'getPickup'
         }
       }).done(function(results) {
+
         if(results == null) {
           console.log('AJAX error: returned null object')
         }
         else { // calculate the pickup location based on results
-          getPickup(JSON.parse(results));
+          // getPickup(JSON.parse(results));
+          getPickup(results);
         }
       });
       return false;

@@ -46,7 +46,6 @@
     let closer = true;
     let pastLocations = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
     let index = 0;
-    let avg = 0;
     let interval;
     let playBoth = true;
     let firstAskLocation = true;
@@ -108,24 +107,29 @@
   			navigator.geolocation.getCurrentPosition(function(position) {
   				latitude = position.coords.latitude;
   				longitude = position.coords.longitude;
-          distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
+          getLocationHelper();
   			}, function(error) {
           if(firstAskLocation) {
             alert('Geolocation permission denied. Default location will be set to SAL.');
             firstAskLocation = false;
-            distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
+            getLocationHelper();
           }
   			});
   		} else {
         if(firstAskLocation) {
           alert('Geolocation permission denied. Default location will be set to SAL.');
           firstAskLocation = false;
-          distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
+          getLocationHelper();
         }
   		}
+  	}
+
+    function getLocationHelper() {
+      distance = getDistanceFromLatLonInM(latitude, longitude, destLatitude, destLongitude);
 
       // first time got distance, set all in array to that dist
       if(calibrating) {
+        console.log(distance);
         for(let i=1; i<pastLocations.length; i++) {
           pastLocations[i] = distance;
         }
@@ -143,11 +147,11 @@
         }
         index = (index + 1) % pastLocations.length;
       }
-  	}
+    }
 
     function printUserLocation() {
-      console.log('Latitude: ' + latitude + '\nLongitude: ' + longitude + '\nDistance: ' + distance + '\nDistance 9 times ago: ' + pastLocations[(index+1)%pastLocations.length] + '\nCloser? ' + closer + '\nAverage: ' + avg);
-      $('#distanceUpdate').append('<br />Distance: ' + distance + '<br />Distance 9 times ago: ' + pastLocations[(index+1)%pastLocations.length] + '<br />Closer? ' + closer + '<br />Average: ' + avg + '<br /><br />')
+      console.log('Latitude: ' + latitude + '\nLongitude: ' + longitude + '\nDistance: ' + distance + '\nDistance 9 times ago: ' + pastLocations[(index+1)%pastLocations.length] + '\nCloser? ' + closer);
+      $('#distanceUpdate').append('<br />Distance: ' + distance + '<br />Distance 9 times ago: ' + pastLocations[(index+1)%pastLocations.length] + '<br />Closer? ' + closer + '<br /><br />')
       if(closer) {
         $('#distanceUpdate').append(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
         // $('#distanceUpdate').html(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
@@ -204,16 +208,6 @@
 
     function deg2rad(deg) {
       return deg * (Math.PI/180)
-    }
-
-    function average(arr) {
-      let sum = 0;
-      for(let i=0; i<arr.length; i++) {
-        sum += arr[i];
-        console.log(arr[i]);
-      }
-      console.log(sum);
-      return sum/arr.length;
     }
 
     function ajax() {

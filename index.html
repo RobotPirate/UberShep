@@ -25,7 +25,7 @@
       <div id="happyOrNot">
         <a id="audioSettings">Audio:</a>
         <a data-audio-settings="both" class="audioSettingBtn">On path and warning sounds</a>
-        <a data-audio-settings="onlywarning" class="audioSettingBtn">Warning sounds</a>
+        <a data-audio-settings="onlywarning" class="audioSettingBtn">Warning sounds only</a>
       </div>
       <i class="fas fa-cog"></i>
     </div>
@@ -44,7 +44,7 @@
     let destLongitude = -118.122893;
     let distance = -1;
     let closer = true;
-    let pastLocations = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000];
+    let pastLocations = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let index = 0;
     let interval;
     let playBoth = true;
@@ -151,14 +151,14 @@
 
     function printUserLocation() {
       console.log('Latitude: ' + latitude + '\nLongitude: ' + longitude + '\nDistance: ' + distance + '\nDistance 9 times ago: ' + pastLocations[(index+1)%pastLocations.length] + '\nCloser? ' + closer);
-      $('#distanceUpdate').append('<br />Distance: ' + distance + '<br />Distance 9 times ago: ' + pastLocations[(index+1)%pastLocations.length] + '<br />Closer? ' + closer + '<br /><br />')
+      // $('#distanceUpdate').append('<br />Distance: ' + distance + '<br />Distance 9 times ago: ' + pastLocations[(index+1)%pastLocations.length] + '<br />Closer? ' + closer + '<br /><br />')
       if(closer) {
-        $('#distanceUpdate').append(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
-        // $('#distanceUpdate').html(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
+        // $('#distanceUpdate').append(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
+        $('#distanceUpdate').html(happyMessages[randomIntFromInterval(0, happyMessages.length)]);
       }
       else {
-        $('#distanceUpdate').append(sadMessages[randomIntFromInterval(0, sadMessages.length)]);
-        // $('#distanceUpdate').html(sadMessages[randomIntFromInterval(0, sadMessages.length)]);
+        // $('#distanceUpdate').append(sadMessages[randomIntFromInterval(0, sadMessages.length)]);
+        $('#distanceUpdate').html(sadMessages[randomIntFromInterval(0, sadMessages.length)]);
       }
     }
 
@@ -240,15 +240,16 @@
 
     // call when arrive at destination, reset everything
     function reward() {
+      $('#distanceUpdate').html('You\'ve arrived!  Your UberPool will arrive soon.');
+      // $('#distanceUpdate').append('<br /><br />You\'ve arrived!  Your UberPool will arrive soon.');
       setTimeout(function() {
         clearInterval(interval);
         firstAskLocation = true;
         calibrating = true;
-      }, 250);
+        noSleep.disable();
+      }, 300);
 
       rewardAudio.play();
-      // $('#distanceUpdate').html('You\'ve arrived!  Your UberPool will arrive soon.');
-      $('#distanceUpdate').append('<br /><br />You\'ve arrived!  Your UberPool will arrive soon.');
     }
   </script>
 </html>

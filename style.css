@@ -85,7 +85,7 @@ body {
   }
 }
 
-@media (max-width: 715px) {
+@media (max-width: 770px) {
   .audioSettingBtn {
     display: block;
     margin-top: 10px;

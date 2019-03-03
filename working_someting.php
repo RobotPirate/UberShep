@@ -33,10 +33,10 @@
 
   // 1 - Estimate a trip
   $url_params = [];
-  $url_params["start_latitude"] = 37.761492;
-  $url_params["start_longitude"] = -122.423941;
-  $url_params["end_latitude"] = 37.775393;
-  $url_params["end_longitude"] = -122.417546;
+  $url_params["start_latitude"] = 34.021024;
+  $url_params["start_longitude"] = -118.291579;
+  $url_params["end_latitude"] = 34.139051;
+  $url_params["end_longitude"] = -118.122951;
 
   $request_estimate_result = json_decode(call_uber_api($token, "POST", "https://sandbox-api.uber.com/v1.2/requests/estimate", $url_params), TRUE);
   $fare_id = $request_estimate_result['fare']['fare_id'];
@@ -49,10 +49,10 @@
   // 2 - Create Request
   $url_params = [];
   $url_params["fare_id"] = $fare_id;
-  $url_params["start_latitude"] = 37.761492;
-  $url_params["start_longitude"] = -122.423941;
-  $url_params["end_latitude"] = 37.775393;
-  $url_params["end_longitude"] = -122.417546;
+  $url_params["start_latitude"] = 34.021024;
+  $url_params["start_longitude"] = -118.291579;
+  $url_params["end_latitude"] = 34.139051;
+  $url_params["end_longitude"] = -118.122951;
 
   $request_result = json_decode(call_uber_api($token, "POST", "https://sandbox-api.uber.com/v1.2/requests", $url_params), TRUE);
   $request_id = $request_result['request_id'];
